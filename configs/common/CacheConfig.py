@@ -67,6 +67,11 @@ def _get_cache_opts(level, options):
     if hasattr(options, prefetcher_attr):
         opts['prefetcher'] = _get_hwp(getattr(options, prefetcher_attr))
 
+    replacement_attr = '{}_repl'.format(level)
+    if hasattr(options, replacement_attr):
+        attribute = 'replacement_policy'
+        opts[attribute] = ObjectList.repl_list.get(getattr(options, replacement_attr))()
+
     return opts
 
 def config_cache(options, system):
