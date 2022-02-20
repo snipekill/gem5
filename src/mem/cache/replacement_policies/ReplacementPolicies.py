@@ -74,9 +74,6 @@ class BIPRP(LRURP):
     cxx_header = "mem/cache/replacement_policies/bip_rp.hh"
     btp = Param.Percent(3, "Percentage of blocks to be inserted as MRU")
 
-class LIPRP(BIPRP):
-    btp = 0
-
 class MRURP(BaseReplacementPolicy):
     type = 'MRURP'
     cxx_class = 'gem5::replacement_policy::MRU'
@@ -149,3 +146,13 @@ class WeightedLRURP(LRURP):
     type = "WeightedLRURP"
     cxx_class = 'gem5::replacement_policy::WeightedLRU'
     cxx_header = "mem/cache/replacement_policies/weighted_lru_rp.hh"
+
+class NMRURP(BaseReplacementPolicy):
+    type = 'NMRURP'
+    cxx_class = 'gem5::replacement_policy::NMRU'
+    cxx_header = "mem/cache/replacement_policies/nmru_rp.hh"
+
+class LIPRP(BaseReplacementPolicy):
+    type = 'LIPRP'
+    cxx_class = 'gem5::replacement_policy::LIP'
+    cxx_header = "mem/cache/replacement_policies/lip_rp.hh"
