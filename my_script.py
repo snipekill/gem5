@@ -1,8 +1,9 @@
 import subprocess
-benchmarks = ['619.lbm_s', '538.imagick_r', '644.nab_s', '625.x264_s', '605.mcf_s', '657.xz_s', '602.gcc_s', '600.perlbench_s', 
+benchmarks = ['619.lbm_s', '638.imagick_s', '644.nab_s', '625.x264_s', '605.mcf_s', '657.xz_s', '602.gcc_s', '600.perlbench_s', 
     '631.deepsjeng_s', '641.leela_s', '623.xalancbmk_s']
 
-REPLACEMENT_POLICIES = ['NMRURP', 'RANDOMRP', 'LIPRP']
+# REPLACEMENT_POLICIES = ['NMRURP', 'RandomRP', 'LIPRP']
+REPLACEMENT_POLICIES = ['RandomRP']
 
 for REPLACEMENT_POLICY in REPLACEMENT_POLICIES:
     bashCommand = "make simall REPLACEMENT_POLICY=" + REPLACEMENT_POLICY
