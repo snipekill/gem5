@@ -77,14 +77,37 @@ NMRU::getVictim(const ReplacementCandidates& candidates) const
     // There must be at least one replacement candidate
     assert(candidates.size() > 0);
 
-    // Find random enrty between 1 and n-1
-    ReplaceableEntry* victim;
-
     if (candidates.size() == 1)
-        victim = candidates[0];
-    else
-        victim = candidates[random_mt.random<unsigned>(1,
-                                    candidates.size() - 1)];
+        return candidates[0];
+    // Find random enrty between 1 and n-1
+     // Visit all candidates to find victim
+    ReplaceableEntry* victim;
+    ReplaceableEntry* mru_candidate = candidates[0];
+    unsigned int mru_index = 0;
+    for(unsigned int i = 1; i<candidates.size();i++){
+        ReplaceableEntry* candidate = candidates[i];
+        std::shared_ptr<NMRUReplData> candidate_replacement_data =
+            std::static_pointer_cast<NMRUReplData>(candidate->replacementData);
+
+        // Stop searching entry if a cache line that doesn't warm up is found.
+        if (candidate_replacement_data->lastTouchTick == 0) {
+            victim = candidate;
+            return victim;
+        } else if (candidate_replacement_data->lastTouchTick >
+                std::static_pointer_cast<NMRUReplData>(
+                    mru_candidate->replacementData)->lastTouchTick) {
+            mru_candidate = candidate;
+            mru_index = i;
+        }
+    }
+
+    unsigned int victim_index;
+    
+    do{
+        victim_index = random_mt.random<unsigned>(0, candidates.size() - 1);
+    }while(victim_index == mru_index);
+
+    victim = candidates[victim_index];
 
     return victim;
 }
