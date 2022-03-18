@@ -158,6 +158,12 @@ class BaseIndexingPolicy : public SimObject
      */
     virtual Addr regenerateAddr(const Addr tag, const ReplaceableEntry* entry)
                                                                     const = 0;
+
+
+    /**
+     * Generate the hashed eight bit address from the given address.
+     */
+    virtual Addr extractHashedEightBitPC(const Addr addr) const;
 };
 
 } // namespace gem5

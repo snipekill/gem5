@@ -84,6 +84,12 @@ class RandomRP(BaseReplacementPolicy):
     cxx_class = 'gem5::replacement_policy::Random'
     cxx_header = "mem/cache/replacement_policies/random_rp.hh"
 
+class AIPRP(BaseReplacementPolicy):
+    type = 'AIPRP'
+    cxx_class = 'gem5::replacement_policy::AIP'
+    cxx_header = "mem/cache/replacement_policies/aip_rp.hh"
+    num_bits = Param.Int(4, "Number of bits per RRPV")
+
 class BRRIPRP(BaseReplacementPolicy):
     type = 'BRRIPRP'
     cxx_class = 'gem5::replacement_policy::BRRIP'

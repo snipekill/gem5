@@ -101,4 +101,10 @@ BaseIndexingPolicy::extractTag(const Addr addr) const
     return (addr >> tagShift);
 }
 
+Addr
+BaseIndexingPolicy::extractHashedEightBitPC(const Addr addr) const
+{
+     return addr;
+}
+
 } // namespace gem5

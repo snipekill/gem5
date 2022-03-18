@@ -127,6 +127,7 @@ class BaseSetAssoc : public BaseTags
     CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat) override
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
+        int address = indexingPolicy->extractHashedEightBitPC(pkt->getAddr());
         DPRINTF(Cache,"Replacement Policy is: %s\n",
                                  // replacementPolicy->name());
                                  typeid(replacementPolicy).name());
