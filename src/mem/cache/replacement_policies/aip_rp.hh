@@ -76,10 +76,10 @@ class AIP : public Base
         uint8_t hashed_y;
 
         // Counter to store the maxCpresent
-        unit8_t max_cpresent;
+        uint8_t max_cpresent;
 
         // Counter to store the maxCpast
-        unit8_t max_cpast;
+        uint8_t max_cpast;
 
         /**
          * Re-Reference Interval Prediction Value.
