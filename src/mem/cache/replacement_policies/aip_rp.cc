@@ -77,7 +77,7 @@ AIP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
 }
 
 void
-AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
+AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
 {
     // update each line counter
 
@@ -107,8 +107,23 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     
 }
 
+
 void
-AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
+AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt)
+{
+    panic("Cant train AIP's predictor without access information.");
+}
+
+void
+AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data)
+    const
+{
+    panic("Cant train AIP's predictor without access information.");
+}
+
+
+void
+AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
 {
     std::shared_ptr<AIPReplData> casted_replacement_data =
         std::static_pointer_cast<AIPReplData>(replacement_data);
@@ -136,6 +151,20 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     casted_replacement_data->max_cpresent = 0;
     casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
     casted_replacement_data->conf = pteConf[hashedPC][hashedY];
+}
+
+
+void
+AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt)
+{
+    panic("Cant train AIP's predictor without access information.");
+}
+
+void
+AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
+    const
+{
+    panic("Cant train AIP's predictor without access information.");
 }
 
 ReplaceableEntry*

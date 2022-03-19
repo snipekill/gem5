@@ -78,11 +78,22 @@ class Base : public SimObject
     {
         touch(replacement_data);
     }
+    /**
+     * Update replacement data.
+     *
+     * @param replacement_data Replacement data to be touched.
+     * @param pkt Packet that generated this access.
+     * @param candidates this is for replacement
+     */
+    virtual void touch(const std::shared_ptr<ReplacementData>&
+        replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
+    {
+        touch(replacement_data);
+    }
+
     virtual void touch(const std::shared_ptr<ReplacementData>&
         replacement_data) const = 0;
 
-    virtual void touch(const std::shared_ptr<ReplacementData>&
-        replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const = 0;
 
     /**
      * Reset replacement data. Used when it's holder is inserted/validated.
@@ -95,20 +106,30 @@ class Base : public SimObject
     {
         reset(replacement_data);
     }
+    /**
+     * Reset replacement data. Used when it's holder is inserted/validated.
+     *
+     * @param replacement_data Replacement data to be reset.
+     * @param pkt Packet that generated this access.
+     * @param candidates for replacement
+     */
+    virtual void reset(const std::shared_ptr<ReplacementData>&
+    replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
+    {
+        reset(replacement_data);
+    }
     virtual void reset(const std::shared_ptr<ReplacementData>&
         replacement_data) const = 0;
 
-    virtual void reset(const std::shared_ptr<ReplacementData>&
-    replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const = 0;
 
-    /**
-     * Find replacement victim among candidates.
-     *
-     * @param candidates Replacement candidates, selected by indexing policy.
-     * @return Replacement entry to be replaced.
-     */
-    virtual ReplaceableEntry* getVictim(
-                           const ReplacementCandidates& candidates) const = 0;
+    // /**
+    //  * Find replacement victim among candidates.
+    //  *
+    //  * @param candidates Replacement candidates, selected by indexing policy.
+    //  * @return Replacement entry to be replaced.
+    //  */
+    // virtual ReplaceableEntry* getVictim(
+    //                        const ReplacementCandidates& candidates) const = 0;
 
     /**
      * Find replacement victim among candidates.

@@ -135,8 +135,20 @@ class AIP : public Base
      * @param pkt Packet Data
      * @param candidates victim data
      */
-    void touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
-                                                                     override;
+    void touch(const std::shared_ptr<ReplacementData>& replacement_data, 
+        const PacketPtr pkt, const ReplacementCandidates& candidates) override;
+
+    /**
+     * Touch an entry to update its replacement data.
+     *
+     * @param replacement_data Replacement data to be touched.
+     * @param pkt Packet Data
+     */
+    void touch(const std::shared_ptr<ReplacementData>& replacement_data, 
+        const PacketPtr pkt) override;
+
+    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+        override;
 
     /**
      * Reset replacement data. Used when an entry is inserted.
@@ -146,9 +158,21 @@ class AIP : public Base
      * @param pkt packet data
      * @param candidates victim data
      */
-    void reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
-                                                                     override;
+    void reset(const std::shared_ptr<ReplacementData>& replacement_data, 
+        const PacketPtr pkt, const ReplacementCandidates& candidates) override;
 
+    /**
+     * Reset replacement data. Used when an entry is inserted.
+     * Set RRPV according to the insertion policy used.
+     *
+     * @param replacement_data Replacement data to be reset.
+     * @param pkt packet data
+     */
+    void reset(const std::shared_ptr<ReplacementData>& replacement_data, 
+        const PacketPtr pkt) override;
+
+    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+        override;
     /**
      * Find replacement victim using rrpv.
      *
