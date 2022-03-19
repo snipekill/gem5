@@ -121,16 +121,6 @@ class Base : public SimObject
     virtual void reset(const std::shared_ptr<ReplacementData>&
         replacement_data) const = 0;
 
-
-    // /**
-    //  * Find replacement victim among candidates.
-    //  *
-    //  * @param candidates Replacement candidates, selected by indexing policy.
-    //  * @return Replacement entry to be replaced.
-    //  */
-    // virtual ReplaceableEntry* getVictim(
-    //                        const ReplacementCandidates& candidates) const = 0;
-
     /**
      * Find replacement victim among candidates.
      *
@@ -139,6 +129,16 @@ class Base : public SimObject
      */
     virtual ReplaceableEntry* getVictim(
                            const ReplacementCandidates& candidates);
+
+    /**
+     * Find replacement victim among candidates.
+     *
+     * @param candidates Replacement candidates, selected by indexing policy.
+     * @return Replacement entry to be replaced.
+     */
+    virtual ReplaceableEntry* getVictim(
+                           const ReplacementCandidates& candidates) const = 0;
+
 
     /**
      * Instantiate a replacement data entry.
