@@ -26,13 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <iostream>
+
 #include "mem/cache/replacement_policies/aip_rp.hh"
 
 #include <cassert>
 #include <memory>
 
-#include "debug/CacheRepl.hh"
-#include "base/trace.hh"
+// #include "debug/CacheRepl.hh"
+// #include "base/trace.hh"
+
 
 #include "base/logging.hh" // For fatal_if
 #include "base/random.hh"
@@ -64,30 +67,31 @@ AIP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
     try
     {
         /* code */
-        std::shared_ptr<AIPReplData> casted_replacement_data =
-            std::static_pointer_cast<AIPReplData>(replacement_data);
+        // std::shared_ptr<AIPReplData> casted_replacement_data =
+        //     std::static_pointer_cast<AIPReplData>(replacement_data);
 
 
             // Reset last touch timestamp
         std::static_pointer_cast<AIPReplData>(
             replacement_data)->lastTouchTick = Tick(0);
 
-        if(!casted_replacement_data->validPC){
-            return;
-        }
+        // if(!casted_replacement_data->validPC){
+        //     return;
+        // }
         
-        uint8_t maxCStored = pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y];
+        // uint8_t maxCStored = pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y];
 
-        pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->max_cpresent;
-        if(maxCStored == casted_replacement_data->max_cpast){
-            pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = true;
-        }
-        else
-            pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = false;
+        // pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->max_cpresent;
+        // if(maxCStored == casted_replacement_data->max_cpast){
+        //     pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = true;
+        // }
+        // else
+        //     pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = false;
     }
     catch(const std::exception& e)
     {
-        DPRINTF(CacheRepl, "Error Thrown Idiot(Invalidate): %s\n", e.what());
+        std::cout << "Error Thrown Idiot(Invalidate): " << e.what()<<std::endl;
+        // DPRINTF(CacheRepl, "Error Thrown Idiot(Invalidate): %s\n", e.what());
     }
     
 }
@@ -101,32 +105,33 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     try
     {
         /* code */
-        for (const auto& candidate : candidates) {
-            std::shared_ptr<AIPReplData> candidate_repl_data =
-                std::static_pointer_cast<AIPReplData>(
-                    candidate->replacementData);
+        // for (const auto& candidate : candidates) {
+        //     std::shared_ptr<AIPReplData> candidate_repl_data =
+        //         std::static_pointer_cast<AIPReplData>(
+        //             candidate->replacementData);
 
-            candidate_repl_data->rrpv += 1;
+        //     candidate_repl_data->rrpv += 1;
             
-        }
+        // }
 
         //reset rrpv counter to 0 after updating max C counter
 
-        std::shared_ptr<AIPReplData> casted_replacement_data =
-            std::static_pointer_cast<AIPReplData>(replacement_data);
+        // std::shared_ptr<AIPReplData> casted_replacement_data =
+        //     std::static_pointer_cast<AIPReplData>(replacement_data);
 
-        if (casted_replacement_data->rrpv > casted_replacement_data->max_cpresent){
-            casted_replacement_data->max_cpresent = casted_replacement_data->rrpv;
-        }
+        // if (casted_replacement_data->rrpv > casted_replacement_data->max_cpresent){
+        //     casted_replacement_data->max_cpresent = casted_replacement_data->rrpv;
+        // }
 
-        casted_replacement_data->rrpv.reset();
+        // casted_replacement_data->rrpv.reset();
         // Update last touch timestamp
         std::static_pointer_cast<AIPReplData>(
             replacement_data)->lastTouchTick = curTick();
     }
     catch(const std::exception& e)
     {
-        DPRINTF(CacheRepl, "Error Thrown Idiot(Touch Function): %s\n", e.what());
+        std::cout << "Error Thrown Idiot(Touch Function): " << e.what()<<std::endl;
+        // DPRINTF(CacheRepl, "Error Thrown Idiot(Touch Function): %s\n", e.what());
     }
     
     
@@ -164,33 +169,34 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
         // "distant re-reference" otherwise
         
         // check if instruction has PC
-        if (!pkt->req->hasPC()){
-            casted_replacement_data->validPC = false;
-            return;
-        }
-        uint64_t PC = pkt->req->getPC();
-        uint8_t hashedPC = (uint8_t)PC;
-        for(unsigned int i=1;i<8;i++){
-            PC = PC >> 8;
-            hashedPC = hashedPC ^ PC;
-        }
-        uint64_t Y = pkt->getAddr();
-        uint8_t hashedY = (uint8_t)Y;
-        for(unsigned int i=1;i<8;i++){
-            Y = Y >> 8;
-            hashedY = hashedY ^ Y;
-        }
-        casted_replacement_data->hashed_pc = hashedPC;
-        casted_replacement_data->hashed_y = hashedY;
-        casted_replacement_data->rrpv.reset();
+        // if (!pkt->req->hasPC()){
+        //     casted_replacement_data->validPC = false;
+        //     return;
+        // }
+        // uint64_t PC = pkt->req->getPC();
+        // uint8_t hashedPC = (uint8_t)PC;
+        // for(unsigned int i=1;i<8;i++){
+        //     PC = PC >> 8;
+        //     hashedPC = hashedPC ^ PC;
+        // }
+        // uint64_t Y = pkt->getAddr();
+        // uint8_t hashedY = (uint8_t)Y;
+        // for(unsigned int i=1;i<8;i++){
+        //     Y = Y >> 8;
+        //     hashedY = hashedY ^ Y;
+        // }
+        // casted_replacement_data->hashed_pc = hashedPC;
+        // casted_replacement_data->hashed_y = hashedY;
+        // casted_replacement_data->rrpv.reset();
 
-        casted_replacement_data->max_cpresent = 0;
-        casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
-        casted_replacement_data->conf = pteConf[hashedPC][hashedY];
+        // casted_replacement_data->max_cpresent = 0;
+        // casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
+        // casted_replacement_data->conf = pteConf[hashedPC][hashedY];
     }
     catch(const std::exception& e)
     {
-        DPRINTF(CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
+        std::cout << "Error Thrown Idiot(Reste Function): " << e.what()<<std::endl;
+        // DPRINTF(CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
     }
     
 }
@@ -221,15 +227,15 @@ AIP::getVictim(const ReplacementCandidates& candidates)
         // Use first candidate as dummy victim
         ReplaceableEntry* LRUvictim = candidates[0];
 
-        unsigned int expired_indices[candidates.size()+1];
-        unsigned int expired_entries = 0;
+        // unsigned int expired_indices[candidates.size()+1];
+        // unsigned int expired_entries = 0;
 
         for(unsigned int i = 0; i<candidates.size();i++){
             ReplaceableEntry* candidate = candidates[i];
             std::shared_ptr<AIPReplData> candidate_repl_data =
                 std::static_pointer_cast<AIPReplData>(
                     candidate->replacementData);
-            candidate_repl_data->rrpv += 1;
+            // candidate_repl_data->rrpv += 1;
 
             if (candidate_repl_data->lastTouchTick <
                     std::static_pointer_cast<AIPReplData>(
@@ -237,48 +243,50 @@ AIP::getVictim(const ReplacementCandidates& candidates)
                 LRUvictim = candidate;
             }
 
-            if(candidate_repl_data->rrpv > candidate_repl_data->max_cpresent && 
-                candidate_repl_data->rrpv > candidate_repl_data->max_cpast &&
-                    candidate_repl_data->conf == 1){
-                    expired_indices[expired_entries++] = i; 
-            }
+            // if(candidate_repl_data->rrpv > candidate_repl_data->max_cpresent && 
+            //     candidate_repl_data->rrpv > candidate_repl_data->max_cpast &&
+            //         candidate_repl_data->conf == 1){
+            //         expired_indices[expired_entries++] = i; 
+            // }
 
         }
 
-        if(std::static_pointer_cast<AIPReplData>(
-                            LRUvictim->replacementData)->lastTouchTick == 0){
-                                return LRUvictim;
-        }
+        return LRUvictim;
+        // if(std::static_pointer_cast<AIPReplData>(
+        //                     LRUvictim->replacementData)->lastTouchTick == 0){
+        //                         return LRUvictim;
+        // }
 
-        ReplaceableEntry* finalVictim = LRUvictim;
+        // ReplaceableEntry* finalVictim = LRUvictim;
 
-        if(expired_entries > 0){
-            unsigned int random_index = random_mt.random<unsigned>(0, expired_entries);
-            finalVictim = candidates[expired_indices[random_index]];
-        }
+        // if(expired_entries > 0){
+        //     unsigned int random_index = random_mt.random<unsigned>(0, expired_entries);
+        //     finalVictim = candidates[expired_indices[random_index]];
+        // }
 
-        std::shared_ptr<AIPReplData> final_victim_repl_data =
-            std::static_pointer_cast<AIPReplData>(
-                finalVictim->replacementData);
+        // std::shared_ptr<AIPReplData> final_victim_repl_data =
+        //     std::static_pointer_cast<AIPReplData>(
+        //         finalVictim->replacementData);
 
-        if(!final_victim_repl_data->validPC){
-            return finalVictim;
-        }
+        // if(!final_victim_repl_data->validPC){
+        //     return finalVictim;
+        // }
 
-        uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
+        // uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
 
-        pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
-        if(maxCStored == final_victim_repl_data->max_cpast){
-            pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
-        }
-        else
-            pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
+        // pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
+        // if(maxCStored == final_victim_repl_data->max_cpast){
+        //     pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
+        // }
+        // else
+        //     pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
 
-        return finalVictim;
+        // return finalVictim;
     }
     catch(const std::exception& e)
     {
-        DPRINTF(CacheRepl, "Error Thrown Idiot (getVictim Function): %s\n", e.what());
+        std::cout << "Error Thrown Idiot(getVictim Function): " << e.what()<<std::endl;
+        // DPRINTF(CacheRepl, "Error Thrown Idiot (getVictim Function): %s\n", e.what());
         assert(candidates.size() > 0);
         return candidates[0];
     }
