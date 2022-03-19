@@ -133,7 +133,7 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     casted_replacement_data->hashed_y = hashedY;
     casted_replacement_data->rrpv.reset();
 
-    casted_replacement_data->max_cpresent.reset();
+    casted_replacement_data->max_cpresent = 0;
     casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
     casted_replacement_data->conf = pteConf[hashedPC][hashedY];
 }

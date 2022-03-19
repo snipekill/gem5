@@ -76,10 +76,10 @@ class AIP : public Base
         uint8_t hashed_y;
 
         // Counter to store the maxCpresent
-        SatCounter8 max_cpresent;
+        unit8_t max_cpresent;
 
         // Counter to store the maxCpast
-        SatCounter8 max_cpast;
+        unit8_t max_cpast;
 
         /**
          * Re-Reference Interval Prediction Value.
@@ -97,7 +97,7 @@ class AIP : public Base
          * Default constructor. Invalidate data.
          */
         AIPReplData(const int num_bits)
-            : lastTouchTick(0),hashed_pc(0), hashed_y(0),max_cpresent(num_bits), max_cpast(num_bits), rrpv(num_bits), conf(false)
+            : lastTouchTick(0),hashed_pc(0), hashed_y(0), max_cpresent(0), max_cpast(0), rrpv(num_bits), conf(false)
         {
         }
     };
