@@ -151,10 +151,6 @@ AIP::getVictim(const ReplacementCandidates& candidates) const
     unsigned int expired_indices[candidates.size()+1];
     unsigned int expired_entries = 0;
 
-    // Store victim->rrpv in a variable to improve code readability
-    int victim_RRPV = std::static_pointer_cast<AIPReplData>(
-                        victim->replacementData)->rrpv;
-
     for(unsigned int i = 0; i<candidates.size();i++){
         ReplaceableEntry* candidate = candidates[i];
         std::shared_ptr<AIPReplData> candidate_repl_data =

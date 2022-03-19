@@ -110,11 +110,11 @@ class AIP : public Base
      */
     const unsigned numRRPVBits;
 
-    uint8_t pteMaxC[256][256];
-    bool pteConf[256][256];
 
 
   public:
+    uint8_t pteMaxC[256][256];
+    bool pteConf[256][256];
     typedef AIPRPParams Params;
     AIP(const Params &p);
     ~AIP() = default;
@@ -133,7 +133,7 @@ class AIP : public Base
      *
      * @param replacement_data Replacement data to be touched.
      */
-    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+    void touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
                                                                      override;
 
     /**
@@ -142,7 +142,7 @@ class AIP : public Base
      *
      * @param replacement_data Replacement data to be reset.
      */
-    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+    void reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt) const
                                                                      override;
 
     /**
