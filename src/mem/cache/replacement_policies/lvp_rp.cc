@@ -214,7 +214,6 @@ LVP::getVictim(const ReplacementCandidates& candidates)
             std::shared_ptr<LVPReplData> candidate_repl_data =
                 std::static_pointer_cast<LVPReplData>(
                     candidate->replacementData);
-            candidate_repl_data->rrpv += 1;
 
             if (candidate_repl_data->lastTouchTick <
                     std::static_pointer_cast<LVPReplData>(
