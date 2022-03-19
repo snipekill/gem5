@@ -45,6 +45,12 @@ namespace replacement_policy
 AIP::AIP(const Params &p)
   : Base(p), numRRPVBits(p.num_bits)
 {
+    for(unsigned int i=0;i<256;i++){
+        for(unsigned int j=0;j<256;j++){
+            pteMaxC[i][j] = 0;
+            pteConf[i][j] = false;
+        }
+    }
     fatal_if(numRRPVBits <= 0, "There should be at least one bit per RRPV.\n");
     fatal_if(numRRPVBits > 8, "There should be at max 8 bits per RRPV.\n");
 }

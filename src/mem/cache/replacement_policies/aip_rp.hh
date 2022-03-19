@@ -97,14 +97,8 @@ class AIP : public Base
          * Default constructor. Invalidate data.
          */
         AIPReplData(const int num_bits)
-            : hashed_pc(0), max_cpresent(num_bits), max_cpast(num_bits), rrpv(num_bits), conf(false), lastTouchTick(0)
+            : lastTouchTick(0),hashed_pc(0), hashed_y(0),max_cpresent(num_bits), max_cpast(num_bits), rrpv(num_bits), conf(false)
         {
-          for(unsigned int i=0;i<256;i++){
-            for(unsigned int j=0;j<256;j++){
-              this->pteMaxC[i][j] = 0;
-              this->pteConf[i][j] = false;
-            }
-          }
         }
     };
 
