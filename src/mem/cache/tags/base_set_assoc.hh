@@ -127,7 +127,6 @@ class BaseSetAssoc : public BaseTags
     CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat) override
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
-        int address = indexingPolicy->extractHashedEightBitPC(pkt->getAddr());
         DPRINTF(Cache,"Replacement Policy is: %s\n",
                                  // replacementPolicy->name());
                                  typeid(replacementPolicy).name());
@@ -146,7 +145,7 @@ class BaseSetAssoc : public BaseTags
         // If a cache hit
         if (blk != nullptr) {
             const std::vector<ReplaceableEntry*> entries =
-            indexingPolicy->getPossibleEntries(addr);
+            indexingPolicy->getPossibleEntries(pkt->getAddr());
             // Update number of references to accessed block
             blk->increaseRefCount();
 
@@ -204,7 +203,7 @@ class BaseSetAssoc : public BaseTags
 
         // Get possible entries to be victimized
         const std::vector<ReplaceableEntry*> entries =
-            indexingPolicy->getPossibleEntries(addr);
+            indexingPolicy->getPossibleEntries(pkt->getAddr());
         // Update replacement policy
         replacementPolicy->reset(blk->replacementData, pkt, entries);
     }
