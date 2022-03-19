@@ -87,7 +87,7 @@ AIP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
     }
     catch(const std::exception& e)
     {
-        DPRINTF(debug::CacheRepl, "Error Thrown Idiot(Invalidate): %s\n", e.what());
+        DPRINTF(CacheRepl, "Error Thrown Idiot(Invalidate): %s\n", e.what());
     }
     
 }
@@ -126,7 +126,7 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     }
     catch(const std::exception& e)
     {
-        DPRINTF(debug::CacheRepl, "Error Thrown Idiot(Touch Function): %s\n", e.what());
+        DPRINTF(CacheRepl, "Error Thrown Idiot(Touch Function): %s\n", e.what());
     }
     
     
@@ -190,7 +190,7 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     }
     catch(const std::exception& e)
     {
-        DPRINTF(debug::CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
+        DPRINTF(CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
     }
     
 }
@@ -278,7 +278,7 @@ AIP::getVictim(const ReplacementCandidates& candidates)
     }
     catch(const std::exception& e)
     {
-        DPRINTF(debug::CacheRepl, "Error Thrown Idiot (getVictim Function): %s\n", e.what());
+        DPRINTF(CacheRepl, "Error Thrown Idiot (getVictim Function): %s\n", e.what());
         assert(candidates.size() > 0);
         return candidates[0];
     }
