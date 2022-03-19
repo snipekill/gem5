@@ -128,15 +128,6 @@ class Base : public SimObject
      * @return Replacement entry to be replaced.
      */
     virtual ReplaceableEntry* getVictim(
-                           const ReplacementCandidates& candidates);
-
-    /**
-     * Find replacement victim among candidates.
-     *
-     * @param candidates Replacement candidates, selected by indexing policy.
-     * @return Replacement entry to be replaced.
-     */
-    virtual ReplaceableEntry* getVictim(
                            const ReplacementCandidates& candidates) const = 0;
 
 

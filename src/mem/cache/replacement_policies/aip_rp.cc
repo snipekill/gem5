@@ -168,7 +168,7 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
 }
 
 ReplaceableEntry*
-AIP::getVictim(const ReplacementCandidates& candidates)
+AIP::getVictim(const ReplacementCandidates& candidates) const
 {
     // There must be at least one replacement candidate
     assert(candidates.size() > 0);
@@ -216,14 +216,14 @@ AIP::getVictim(const ReplacementCandidates& candidates)
         std::static_pointer_cast<AIPReplData>(
             finalVictim->replacementData);
 
-    uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
+    // uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
 
-    pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
-    if(maxCStored == final_victim_repl_data->max_cpast){
-        pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
-    }
-    else
-        pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
+    // pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
+    // if(maxCStored == final_victim_repl_data->max_cpast){
+    //     pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
+    // }
+    // else
+    //     pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
 
     return finalVictim;
 }
