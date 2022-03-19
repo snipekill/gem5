@@ -92,7 +92,7 @@ class AIPRP(BaseReplacementPolicy):
 
 class LVPRP(BaseReplacementPolicy):
     type = 'LVPRP'
-    cxx_class = 'gem5::replacement_policy::lvp_rp.hh'
+    cxx_class = 'gem5::replacement_policy::LVP'
     cxx_header = "mem/cache/replacement_policies/lvp_rp.hh"
     num_bits = Param.Int(8, "Number of bits per RRPV")
 
