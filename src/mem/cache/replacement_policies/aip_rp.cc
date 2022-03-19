@@ -145,7 +145,6 @@ AIP::getVictim(const ReplacementCandidates& candidates) const
     assert(candidates.size() > 0);
 
     // Use first candidate as dummy victim
-    ReplaceableEntry* victim = candidates[0];
     ReplaceableEntry* LRUvictim = candidates[0];
 
     unsigned int expired_indices[candidates.size()+1];
