@@ -58,7 +58,7 @@ WeightedLRU::touch(const std::shared_ptr<ReplacementData>& replacement_data,
 }
 
 ReplaceableEntry*
-WeightedLRU::getVictim(const ReplacementCandidates& candidates) const
+WeightedLRU::getVictim(const ReplacementCandidates& candidates)
 {
     assert(candidates.size() > 0);
 

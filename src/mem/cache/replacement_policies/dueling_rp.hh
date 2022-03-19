@@ -108,7 +108,7 @@ class Dueling : public Base
         const PacketPtr pkt) override;
     void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                      override;
-    ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
+    ReplaceableEntry* getVictim(const ReplacementCandidates& candidates)
                                                                      override;
     std::shared_ptr<ReplacementData> instantiateEntry() override;
 };

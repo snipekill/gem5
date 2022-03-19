@@ -71,7 +71,7 @@ LRU::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 }
 
 ReplaceableEntry*
-LRU::getVictim(const ReplacementCandidates& candidates) const
+LRU::getVictim(const ReplacementCandidates& candidates)
 {
     // There must be at least one replacement candidate
     assert(candidates.size() > 0);

@@ -107,7 +107,7 @@ Dueling::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 }
 
 ReplaceableEntry*
-Dueling::getVictim(const ReplacementCandidates& candidates) const
+Dueling::getVictim(const ReplacementCandidates& candidates)
 {
     // This function assumes that all candidates are either part of the same
     // sampled set, or are not samples.

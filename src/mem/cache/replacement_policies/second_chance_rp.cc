@@ -89,7 +89,7 @@ SecondChance::reset(
 }
 
 ReplaceableEntry*
-SecondChance::getVictim(const ReplacementCandidates& candidates) const
+SecondChance::getVictim(const ReplacementCandidates& candidates)
 {
     // There must be at least one replacement candidate
     assert(candidates.size() > 0);

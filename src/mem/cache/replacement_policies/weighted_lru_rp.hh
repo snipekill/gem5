@@ -83,7 +83,7 @@ class WeightedLRU : public LRU
      * @return Replacement entry to be replaced.
      */
     ReplaceableEntry* getVictim(const ReplacementCandidates&
-                                              candidates) const override;
+                                              candidates) override;
 };
 
 } // namespace replacement_policy
