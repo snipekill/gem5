@@ -108,7 +108,7 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
 }
 
 void
-AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt) const
+AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
 {
     std::shared_ptr<AIPReplData> casted_replacement_data =
         std::static_pointer_cast<AIPReplData>(replacement_data);

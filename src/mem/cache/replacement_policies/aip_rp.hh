@@ -132,6 +132,8 @@ class AIP : public Base
      * Touch an entry to update its replacement data.
      *
      * @param replacement_data Replacement data to be touched.
+     * @param pkt Packet Data
+     * @param candidates victim data
      */
     void touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
                                                                      override;
@@ -141,8 +143,10 @@ class AIP : public Base
      * Set RRPV according to the insertion policy used.
      *
      * @param replacement_data Replacement data to be reset.
+     * @param pkt packet data
+     * @param candidates victim data
      */
-    void reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt) const
+    void reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates) const
                                                                      override;
 
     /**
