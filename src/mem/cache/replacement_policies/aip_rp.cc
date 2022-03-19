@@ -253,7 +253,7 @@ AIP::getVictim(const ReplacementCandidates& candidates)
         ReplaceableEntry* finalVictim = LRUvictim;
 
         if(expired_entries > 0){
-            unsigned int random_index = random_mt.random<unsigned>(0, expired_entries);
+            unsigned int random_index = random_mt.random<unsigned>(0, expired_entries-1);
             finalVictim = candidates[expired_indices[random_index]];
         }
 
