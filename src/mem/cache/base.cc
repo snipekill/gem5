@@ -1039,8 +1039,8 @@ BaseCache::updateCompressionData(CacheBlk *&blk, const uint64_t* data,
             }
 
             // Print victim block's information
-            DPRINTF(CacheRepl, "Data %s replacement victim: %s\n",
-                op_name, victim->print());
+            // DPRINTF(CacheRepl, "Data %s replacement victim: %s\n",
+            //     op_name, victim->print());
         } else {
             // If we do not move the expanded block, we must make room for
             // the expansion to happen, so evict every co-allocated block
@@ -1638,7 +1638,7 @@ BaseCache::allocateBlock(const PacketPtr pkt, PacketList &writebacks)
         return nullptr;
 
     // Print victim block's information
-    DPRINTF(CacheRepl, "Replacement victim: %s\n", victim->print());
+    // DPRINTF(CacheRepl, "Replacement victim: %s\n", victim->print());
 
     // Try to evict blocks; if it fails, give up on allocation
     if (!handleEvictions(evict_blks, writebacks)) {

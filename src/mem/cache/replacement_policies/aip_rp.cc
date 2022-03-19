@@ -31,6 +31,8 @@
 #include <cassert>
 #include <memory>
 
+#include "debug/CacheRepl.hh"
+
 #include "base/logging.hh" // For fatal_if
 #include "base/random.hh"
 #include "params/AIPRP.hh"
@@ -58,26 +60,35 @@ AIP::AIP(const Params &p)
 void
 AIP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
 {
-    std::shared_ptr<AIPReplData> casted_replacement_data =
-        std::static_pointer_cast<AIPReplData>(replacement_data);
+    try
+    {
+        /* code */
+        std::shared_ptr<AIPReplData> casted_replacement_data =
+            std::static_pointer_cast<AIPReplData>(replacement_data);
 
 
-        // Reset last touch timestamp
-    std::static_pointer_cast<AIPReplData>(
-        replacement_data)->lastTouchTick = Tick(0);
+            // Reset last touch timestamp
+        std::static_pointer_cast<AIPReplData>(
+            replacement_data)->lastTouchTick = Tick(0);
 
-    if(!casted_replacement_data->validPC){
-        return;
+        if(!casted_replacement_data->validPC){
+            return;
+        }
+        
+        uint8_t maxCStored = pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y];
+
+        pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->max_cpresent;
+        if(maxCStored == casted_replacement_data->max_cpast){
+            pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = true;
+        }
+        else
+            pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = false;
+    }
+    catch(const std::exception& e)
+    {
+        DPRINTF(CacheRepl, "Error Thrown Idiot(Invalidate): %s\n", e.what());
     }
     
-    uint8_t maxCStored = pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y];
-
-    pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->max_cpresent;
-    if(maxCStored == casted_replacement_data->max_cpast){
-        pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = true;
-    }
-    else
-        pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = false;
 }
 
 void
@@ -86,28 +97,37 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     // update each line counter
 
         // Visit all candidates to find victim
-    for (const auto& candidate : candidates) {
-        std::shared_ptr<AIPReplData> candidate_repl_data =
-            std::static_pointer_cast<AIPReplData>(
-                candidate->replacementData);
+    try
+    {
+        /* code */
+        for (const auto& candidate : candidates) {
+            std::shared_ptr<AIPReplData> candidate_repl_data =
+                std::static_pointer_cast<AIPReplData>(
+                    candidate->replacementData);
 
-        candidate_repl_data->rrpv += 1;
-        
+            candidate_repl_data->rrpv += 1;
+            
+        }
+
+        //reset rrpv counter to 0 after updating max C counter
+
+        std::shared_ptr<AIPReplData> casted_replacement_data =
+            std::static_pointer_cast<AIPReplData>(replacement_data);
+
+        if (casted_replacement_data->rrpv > casted_replacement_data->max_cpresent){
+            casted_replacement_data->max_cpresent = casted_replacement_data->rrpv;
+        }
+
+        casted_replacement_data->rrpv.reset();
+        // Update last touch timestamp
+        std::static_pointer_cast<AIPReplData>(
+            replacement_data)->lastTouchTick = curTick();
     }
-
-    //reset rrpv counter to 0 after updating max C counter
-
-    std::shared_ptr<AIPReplData> casted_replacement_data =
-        std::static_pointer_cast<AIPReplData>(replacement_data);
-
-    if (casted_replacement_data->rrpv > casted_replacement_data->max_cpresent){
-        casted_replacement_data->max_cpresent = casted_replacement_data->rrpv;
+    catch(const std::exception& e)
+    {
+        DPRINTF(CacheRepl, "Error Thrown Idiot(Touch Function): %s\n", e.what());
     }
-
-    casted_replacement_data->rrpv.reset();
-    // Update last touch timestamp
-    std::static_pointer_cast<AIPReplData>(
-        replacement_data)->lastTouchTick = curTick();
+    
     
 }
 
@@ -129,40 +149,49 @@ AIP::touch(const std::shared_ptr<ReplacementData>& replacement_data)
 void
 AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
 {
-    std::shared_ptr<AIPReplData> casted_replacement_data =
-        std::static_pointer_cast<AIPReplData>(replacement_data);
+    try
+    {
+        /* code */
+        std::shared_ptr<AIPReplData> casted_replacement_data =
+            std::static_pointer_cast<AIPReplData>(replacement_data);
 
-        // Set last touch timestamp
-    casted_replacement_data->lastTouchTick = curTick();
+            // Set last touch timestamp
+        casted_replacement_data->lastTouchTick = curTick();
 
-    // Reset RRPV
-    // Replacement data is inserted as "long re-reference" if lower than btp,
-    // "distant re-reference" otherwise
+        // Reset RRPV
+        // Replacement data is inserted as "long re-reference" if lower than btp,
+        // "distant re-reference" otherwise
+        
+        // check if instruction has PC
+        if (!pkt->req->hasPC()){
+            casted_replacement_data->validPC = false;
+            return;
+        }
+        uint64_t PC = pkt->req->getPC();
+        uint8_t hashedPC = (uint8_t)PC;
+        for(unsigned int i=1;i<8;i++){
+            PC = PC >> 8;
+            hashedPC = hashedPC ^ PC;
+        }
+        uint64_t Y = pkt->getAddr();
+        uint8_t hashedY = (uint8_t)Y;
+        for(unsigned int i=1;i<8;i++){
+            Y = Y >> 8;
+            hashedY = hashedY ^ Y;
+        }
+        casted_replacement_data->hashed_pc = hashedPC;
+        casted_replacement_data->hashed_y = hashedY;
+        casted_replacement_data->rrpv.reset();
+
+        casted_replacement_data->max_cpresent = 0;
+        casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
+        casted_replacement_data->conf = pteConf[hashedPC][hashedY];
+    }
+    catch(const std::exception& e)
+    {
+        DPRINTF(CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
+    }
     
-    // check if instruction has PC
-    if (!pkt->req->hasPC()){
-        casted_replacement_data->validPC = false;
-        return;
-    }
-    uint64_t PC = pkt->req->getPC();
-    uint8_t hashedPC = (uint8_t)PC;
-    for(unsigned int i=1;i<8;i++){
-        PC = PC >> 8;
-        hashedPC = hashedPC ^ PC;
-    }
-    uint64_t Y = pkt->getAddr();
-    uint8_t hashedY = (uint8_t)Y;
-    for(unsigned int i=1;i<8;i++){
-        Y = Y >> 8;
-        hashedY = hashedY ^ Y;
-    }
-    casted_replacement_data->hashed_pc = hashedPC;
-    casted_replacement_data->hashed_y = hashedY;
-    casted_replacement_data->rrpv.reset();
-
-    casted_replacement_data->max_cpresent = 0;
-    casted_replacement_data->max_cpast = pteMaxC[hashedPC][hashedY];
-    casted_replacement_data->conf = pteConf[hashedPC][hashedY];
 }
 
 
@@ -182,66 +211,77 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
 ReplaceableEntry*
 AIP::getVictim(const ReplacementCandidates& candidates)
 {
-    // There must be at least one replacement candidate
-    assert(candidates.size() > 0);
+    try
+    {
+        /* code */
+        // There must be at least one replacement candidate
+        assert(candidates.size() > 0);
 
-    // Use first candidate as dummy victim
-    ReplaceableEntry* LRUvictim = candidates[0];
+        // Use first candidate as dummy victim
+        ReplaceableEntry* LRUvictim = candidates[0];
 
-    unsigned int expired_indices[candidates.size()+1];
-    unsigned int expired_entries = 0;
+        unsigned int expired_indices[candidates.size()+1];
+        unsigned int expired_entries = 0;
 
-    for(unsigned int i = 0; i<candidates.size();i++){
-        ReplaceableEntry* candidate = candidates[i];
-        std::shared_ptr<AIPReplData> candidate_repl_data =
-            std::static_pointer_cast<AIPReplData>(
-                candidate->replacementData);
-        candidate_repl_data->rrpv += 1;
-
-        if (candidate_repl_data->lastTouchTick <
+        for(unsigned int i = 0; i<candidates.size();i++){
+            ReplaceableEntry* candidate = candidates[i];
+            std::shared_ptr<AIPReplData> candidate_repl_data =
                 std::static_pointer_cast<AIPReplData>(
-                    LRUvictim->replacementData)->lastTouchTick) {
-            LRUvictim = candidate;
+                    candidate->replacementData);
+            candidate_repl_data->rrpv += 1;
+
+            if (candidate_repl_data->lastTouchTick <
+                    std::static_pointer_cast<AIPReplData>(
+                        LRUvictim->replacementData)->lastTouchTick) {
+                LRUvictim = candidate;
+            }
+
+            if(candidate_repl_data->rrpv > candidate_repl_data->max_cpresent && 
+                candidate_repl_data->rrpv > candidate_repl_data->max_cpast &&
+                    candidate_repl_data->conf == 1){
+                    expired_indices[expired_entries++] = i; 
+            }
+
         }
 
-        if(candidate_repl_data->rrpv > candidate_repl_data->max_cpresent && 
-            candidate_repl_data->rrpv > candidate_repl_data->max_cpast &&
-                candidate_repl_data->conf == 1){
-                   expired_indices[expired_entries++] = i; 
+        if(std::static_pointer_cast<AIPReplData>(
+                            LRUvictim->replacementData)->lastTouchTick == 0){
+                                return LRUvictim;
         }
 
-    }
+        ReplaceableEntry* finalVictim = LRUvictim;
 
-    if(std::static_pointer_cast<AIPReplData>(
-                        LRUvictim->replacementData)->lastTouchTick == 0){
-                            return LRUvictim;
-    }
+        if(expired_entries > 0){
+            unsigned int random_index = random_mt.random<unsigned>(0, expired_entries);
+            finalVictim = candidates[expired_indices[random_index]];
+        }
 
-    ReplaceableEntry* finalVictim = LRUvictim;
+        std::shared_ptr<AIPReplData> final_victim_repl_data =
+            std::static_pointer_cast<AIPReplData>(
+                finalVictim->replacementData);
 
-    if(expired_entries > 0){
-        unsigned int random_index = random_mt.random<unsigned>(0, expired_entries);
-        finalVictim = candidates[expired_indices[random_index]];
-    }
+        if(!final_victim_repl_data->validPC){
+            return finalVictim;
+        }
 
-    std::shared_ptr<AIPReplData> final_victim_repl_data =
-        std::static_pointer_cast<AIPReplData>(
-            finalVictim->replacementData);
+        uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
 
-    if(!final_victim_repl_data->validPC){
+        pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
+        if(maxCStored == final_victim_repl_data->max_cpast){
+            pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
+        }
+        else
+            pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
+
         return finalVictim;
     }
-
-    uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
-
-    pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = final_victim_repl_data->max_cpresent;
-    if(maxCStored == final_victim_repl_data->max_cpast){
-        pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = true;
+    catch(const std::exception& e)
+    {
+        DPRINTF(CacheRepl, "Error Thrown Idiot (getVictim Function): %s\n", e.what());
+        assert(candidates.size() > 0);
+        return candidates[0];
     }
-    else
-        pteConf[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y] = false;
-
-    return finalVictim;
+    
 }
 
 std::shared_ptr<ReplacementData>
