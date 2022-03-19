@@ -155,7 +155,7 @@ class AIP : public Base
      * @param cands Replacement candidates, selected by indexing policy.
      * @return Replacement entry to be replaced.
      */
-    ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
+    ReplaceableEntry* getVictim(const ReplacementCandidates& candidates)
                                                                      override;
 
     /**
