@@ -145,11 +145,13 @@ class BaseSetAssoc : public BaseTags
 
         // If a cache hit
         if (blk != nullptr) {
+            const std::vector<ReplaceableEntry*> entries =
+            indexingPolicy->getPossibleEntries(addr);
             // Update number of references to accessed block
             blk->increaseRefCount();
 
             // Update replacement data of accessed block
-            replacementPolicy->touch(blk->replacementData, pkt);
+            replacementPolicy->touch(blk->replacementData, pkt, entries);
         }
 
         // The tag lookup latency is the same for a hit or a miss

@@ -70,8 +70,10 @@ class AIP : public Base
     /** AIP-specific implementation of replacement data. */
     struct AIPReplData : ReplacementData
     {
+        Tick lastTouchTick;
         // Stores the hashed_pc
         uint8_t hashed_pc;
+        uint8_t hashed_y;
 
         // Counter to store the maxCpresent
         SatCounter8 max_cpresent;
@@ -89,14 +91,20 @@ class AIP : public Base
         SatCounter8 rrpv;
 
         /** Whether the entry is valid. */
-        bool valid;
+        bool conf;
 
         /**
          * Default constructor. Invalidate data.
          */
         AIPReplData(const int num_bits)
-            : hashed_pc(0), max_cpresent(num_bits), max_cpast(num_bits), rrpv(num_bits), valid(false)
+            : hashed_pc(0), max_cpresent(num_bits), max_cpast(num_bits), rrpv(num_bits), conf(false), lastTouchTick(0)
         {
+          for(unsigned int i=0;i<256;i++){
+            for(unsigned int j=0;j<256;j++){
+              this->pteMaxC[i][j] = 0;
+              this->pteConf[i][j] = false;
+            }
+          }
         }
     };
 
@@ -109,7 +117,7 @@ class AIP : public Base
     const unsigned numRRPVBits;
 
     uint8_t pteMaxC[256][256];
-    bool pteCont[256][256];
+    bool pteConf[256][256];
 
 
   public:
