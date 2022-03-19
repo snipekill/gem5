@@ -93,11 +93,13 @@ class AIP : public Base
         /** Whether the entry is valid. */
         bool conf;
 
+        bool validPC;
+
         /**
          * Default constructor. Invalidate data.
          */
         AIPReplData(const int num_bits)
-            : lastTouchTick(0),hashed_pc(0), hashed_y(0), max_cpresent(0), max_cpast(0), rrpv(num_bits), conf(false)
+            : lastTouchTick(0),hashed_pc(0), hashed_y(0), max_cpresent(0), max_cpast(0), rrpv(num_bits), conf(false), validPC(true)
         {
         }
     };

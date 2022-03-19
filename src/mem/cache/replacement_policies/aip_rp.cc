@@ -66,6 +66,10 @@ AIP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
     std::static_pointer_cast<AIPReplData>(
         replacement_data)->lastTouchTick = Tick(0);
 
+    if(!casted_replacement_data->validPC){
+        return;
+    }
+    
     uint8_t maxCStored = pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y];
 
     pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->max_cpresent;
@@ -128,10 +132,18 @@ AIP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
     std::shared_ptr<AIPReplData> casted_replacement_data =
         std::static_pointer_cast<AIPReplData>(replacement_data);
 
+        // Set last touch timestamp
+    casted_replacement_data->lastTouchTick = curTick();
+
     // Reset RRPV
     // Replacement data is inserted as "long re-reference" if lower than btp,
     // "distant re-reference" otherwise
     
+    // check if instruction has PC
+    if (!pkt->req->hasPC()){
+        casted_replacement_data->validPC = false;
+        return;
+    }
     uint64_t PC = pkt->req->getPC();
     uint8_t hashedPC = (uint8_t)PC;
     for(unsigned int i=1;i<8;i++){
@@ -215,6 +227,10 @@ AIP::getVictim(const ReplacementCandidates& candidates)
     std::shared_ptr<AIPReplData> final_victim_repl_data =
         std::static_pointer_cast<AIPReplData>(
             finalVictim->replacementData);
+
+    if(!final_victim_repl_data->validPC){
+        return finalVictim;
+    }
 
     uint8_t maxCStored = pteMaxC[final_victim_repl_data->hashed_pc][final_victim_repl_data->hashed_y];
 
