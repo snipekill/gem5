@@ -32,6 +32,7 @@
 #include <memory>
 
 #include "debug/CacheRepl.hh"
+#include "base/trace.hh"
 
 #include "base/logging.hh" // For fatal_if
 #include "base/random.hh"
