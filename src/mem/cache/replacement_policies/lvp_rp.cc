@@ -75,7 +75,7 @@ LVP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
         if(!casted_replacement_data->validPC){
             return;
         }
-
+        
         pteMaxC[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = casted_replacement_data->rrpv;
         if(casted_replacement_data->rrpv == casted_replacement_data->max_cpast){
             pteConf[casted_replacement_data->hashed_pc][casted_replacement_data->hashed_y] = true;
@@ -91,7 +91,7 @@ LVP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
 }
 
 void
-LVP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+LVP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
 {
     // update each line counter
 
@@ -118,8 +118,23 @@ LVP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     
 }
 
+
 void
-LVP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt)
+LVP::touch(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt)
+{
+    panic("Cant train LVP's predictor without access information.");
+}
+
+void
+LVP::touch(const std::shared_ptr<ReplacementData>& replacement_data)
+    const
+{
+    panic("Cant train LVP's predictor without access information.");
+}
+
+
+void
+LVP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt, const ReplacementCandidates& candidates)
 {
     try
     {
@@ -163,6 +178,20 @@ LVP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const Packe
         DPRINTF(CacheRepl, "Error Thrown Idiot (RESET Function): %s\n", e.what());
     }
     
+}
+
+
+void
+LVP::reset(const std::shared_ptr<ReplacementData>& replacement_data, const PacketPtr pkt)
+{
+    panic("Cant train LVP's predictor without access information.");
+}
+
+void
+LVP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
+    const
+{
+    panic("Cant train LVP's predictor without access information.");
 }
 
 ReplaceableEntry*
